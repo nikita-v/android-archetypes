@@ -9,14 +9,7 @@
     <name>${artifactId}</name>
 
     <properties>
-        <platform.version>
-            #if(${platform} == 8)2.2.1
-            #elseif(${platform} == 9)2.3.1
-            #elseif(${platform} == 10)2.3.3
-            #elseif(${platform} == 14)4.0.1.2
-            #elseif(${platform} == 16)4.1.1.4
-            #end
-        </platform.version>
+        <platform.version>#if(${platform} == 8)2.2.1#elseif(${platform} == 9)2.3.1#elseif(${platform} == 10)2.3.3#elseif(${platform} == 14)4.0.1.2#elseif(${platform} == 16)4.1.1.4#end</platform.version>
     </properties>
 
     <dependencies>
