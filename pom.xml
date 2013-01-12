@@ -12,6 +12,7 @@
 
     <modules>
         <module>release</module>
+        <module>release-robolectric</module>
     </modules>
 
     <distributionManagement>
