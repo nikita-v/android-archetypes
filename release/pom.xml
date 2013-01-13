@@ -4,13 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>android-archetype-project</artifactId>
         <groupId>ru.nikitav.android.archetypes</groupId>
+        <artifactId>android-archetype-project</artifactId>
         <version>1.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <groupId>ru.nikitav.android.archetypes</groupId>
     <artifactId>release</artifactId>
     <packaging>maven-archetype</packaging>
-    <name>Release archetype</name>
+
+    <name>release</name>
 </project>

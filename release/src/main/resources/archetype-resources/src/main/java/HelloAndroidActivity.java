@@ -2,7 +2,6 @@ package ${package};
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 public class HelloAndroidActivity extends Activity {
 
@@ -11,6 +10,5 @@ public class HelloAndroidActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
     }
-
 }
 

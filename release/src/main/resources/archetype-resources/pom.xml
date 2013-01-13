@@ -10,6 +10,7 @@
 
     <properties>
         <platform.version>#if(${platform} == 8)2.2.1#elseif(${platform} == 9)2.3.1#elseif(${platform} == 10)2.3.3#elseif(${platform} == 14)4.0.1.2#elseif(${platform} == 16)4.1.1.4#end</platform.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
@@ -22,81 +23,40 @@
     </dependencies>
 
     <build>
-        <finalName>${project.artifactId}-development</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.basedir}/res</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${project.basedir}/src/templates/res</directory>
-                                    <targetPath>${project.basedir}/res</targetPath>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                 <artifactId>android-maven-plugin</artifactId>
-                <extensions>true</extensions>
+                <version>3.5.0</version>
                 <configuration>
-                    <manifest>
-                        <debuggable>true</debuggable>
-                    </manifest>
+                    <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
+                    <assetsDirectory>${project.basedir}/assets</assetsDirectory>
+                    <resourceDirectory>${project.basedir}/res</resourceDirectory>
+                    <nativeLibrariesDirectory>${project.basedir}/src/main/native</nativeLibrariesDirectory>
                     <sdk>
                         <platform>${platform}</platform>
                     </sdk>
+                    <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    <proguard>
+                        <skip>true</skip>
+                    </proguard>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>manifestUpdate</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>manifest-update</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>alignApk</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>zipalign</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <extensions>true</extensions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <profiles>
-        <profile>
-            <id>development</id>
-            <activation>
-                <property>
-                    <name>environment</name>
-                    <value>!production</value>
-                </property>
-            </activation>
-            <properties>
-                <deployment.stage>In Development</deployment.stage>
-            </properties>
-        </profile>
-        <profile>
-            <id>production</id>
-            <properties>
-                <deployment.stage>In Production</deployment.stage>
-            </properties>
-        </profile>
         <profile>
             <id>release</id>
             <activation>
@@ -135,6 +95,7 @@
                             </execution>
                         </executions>
                     </plugin>
+
                     <plugin>
                         <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                         <artifactId>android-maven-plugin</artifactId>
@@ -151,27 +112,39 @@
                                     ${project.build.directory}/${project.artifactId}-${project.version}-signed-aligned.apk
                                 </outputApk>
                             </zipalign>
-                            <manifest>
-                                <debuggable>false</debuggable>
-                                <versionCodeAutoIncrement>true</versionCodeAutoIncrement>
-                            </manifest>
                             <proguard>
                                 <skip>false</skip>
                             </proguard>
                         </configuration>
                         <executions>
                             <execution>
-                                <id>manifestUpdate</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>manifest-update</goal>
-                                </goals>
-                            </execution>
-                            <execution>
                                 <id>alignApk</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>zipalign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/proguard/mapping.txt</file>
+                                    <type>map</type>
+                                    <classifier>release</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-signed-aligned</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>attach-artifact</goal>
                                 </goals>
                             </execution>
                         </executions>
