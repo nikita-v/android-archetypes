@@ -10,7 +10,7 @@
 
     <groupId>ru.nikitav.android.archetypes</groupId>
     <artifactId>android-archetype-project</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Android Archetypes</name>
